@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Resume Analyzer</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(135deg,#667eea,#764ba2);
+            color: white;
+        }
+
+        .container {
+            width: 70%;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            color: black;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 20px;
+            background: green;
+            color: white;
+        }
+
+        .miss {
+            background: red;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+<h2>Upload Resume</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="resume" required>
+    <button type="submit">Analyze</button>
+</form>
+</div>
+
+
+{% for c in results %}
+<div class="card">
+<h3>{{ c.name }}</h3>
+
+<p><b>Skills:</b></p>
+{% for s in c.skills %}
+<span class="badge">{{ s }}</span>
+{% endfor %}
+
+<p><b>Best Role:</b> {{ c.role }}</p>
+<p><b>Match Score:</b> {{ c.score }}%</p>
+
+<p><b>Missing Skills:</b></p>
+{% for m in c.missing %}
+<span class="badge miss">{{ m }}</span>
+{% endfor %}
+
+<h3 style="font-size:22px;">Education:</h3>
+<ul>
+{% for edu in c.education %}
+<li>{{ edu }}</li>
+{% endfor %}
+</ul>
+
+<h3 style="font-size:22px;">Experience:</h3>
+<p>{{ c.experience }}</p>
+
+<h3 style="font-size:22px;">Projects:</h3>
+<p>{{ c.projects }}</p>
+</div>
+{% endfor %}
+
+
+<div class="card">
+<h3>Check another job</h3>
+
+<form method="POST">
+    <input type="text" name="job_role" placeholder="Enter job role">
+    <button type="submit">Check</button>
+</form>
+
+{% if job_result %}
+<h4>{{ job_result.job }}</h4>
+
+<p><b>✔ You already know:</b></p>
+{% for s in job_result.known %}
+<span class="badge">{{ s }}</span>
+{% endfor %}
+
+<p><b>❌ You need to learn:</b></p>
+{% for s in job_result.missing %}
+<span class="badge miss">{{ s }}</span>
+{% endfor %}
+{% endif %}
+</div>
+
+</div>
+
+</body>
+</html>
